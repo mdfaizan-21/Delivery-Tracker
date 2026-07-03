@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/lastmile
-    username: postgres
-    password: postgrespassword
+    url: jdbc:postgresql://ep-wandering-base-atdoywl5-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require
+    username: neondb_owner
+    password: npg_VYiIDWgno1H4
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
