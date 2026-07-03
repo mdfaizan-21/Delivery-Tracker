@@ -1,15 +1,9 @@
 package com.example.lastmile.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "zones")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Zone {
     
     @Id
@@ -21,4 +15,37 @@ public class Zone {
     
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public Zone() {}
+
+    public Zone(Long id, String zoneName, String description) {
+        this.id = id;
+        this.zoneName = zoneName;
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getZoneName() {
+        return zoneName;
+    }
+
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

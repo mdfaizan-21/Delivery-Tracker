@@ -39,6 +39,9 @@ public class AdminController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private com.example.lastmile.service.RateEngineService rateEngineService;
+
     // --- ZONES ---
     @GetMapping("/zones")
     public List<Zone> getAllZones() {
@@ -67,8 +70,50 @@ public class AdminController {
 
     // --- ORDERS ---
     @GetMapping("/orders")
-    public List<Order> getAllOrders() {
+    public List<Order> getAllOrders(@RequestParam(required = false) com.example.lastmile.model.OrderStatus status,
+                                    @RequestParam(required = false) Long zoneId,
+                                    @RequestParam(required = false) Long agentId) {
+        if (status != null || zoneId != null || agentId != null) {
+            return orderRepository.findByFilters(status, zoneId, agentId);
+        }
         return orderRepository.findAll();
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<Order> createOrderForCustomer(@RequestBody Order orderRequest,
+                                                        @RequestParam Long customerId,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User admin = userRepository.findById(userDetails.getId()).orElseThrow();
+        User customer = userRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        Zone pickupZone = zoneRepository.findById(orderRequest.getPickupZone().getId()).orElseThrow();
+        Zone dropZone = zoneRepository.findById(orderRequest.getDropZone().getId()).orElseThrow();
+        orderRequest.setPickupZone(pickupZone);
+        orderRequest.setDropZone(dropZone);
+
+        java.math.BigDecimal charge = rateEngineService.calculateQuote(
+            pickupZone, dropZone, orderRequest.getOrderType(), orderRequest.getPaymentType(),
+            orderRequest.getLengthCm(), orderRequest.getWidthCm(), orderRequest.getHeightCm(), orderRequest.getActualWeight()
+        );
+        orderRequest.setTotalCharge(charge);
+        
+        orderRequest.setChargedWeight(rateEngineService.getChargedWeight(orderRequest.getActualWeight(), 
+                rateEngineService.calculateVolumetricWeight(orderRequest.getLengthCm(), orderRequest.getWidthCm(), orderRequest.getHeightCm())));
+
+        Order newOrder = orderService.createOrder(orderRequest, customer);
+        return ResponseEntity.ok(newOrder);
+    }
+
+    @PutMapping("/orders/{id}/override-status")
+    public ResponseEntity<Order> overrideOrderStatus(@PathVariable Long id, 
+                                                     @RequestParam com.example.lastmile.model.OrderStatus newStatus,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User admin = userRepository.findById(userDetails.getId()).orElseThrow();
+        Order order = orderRepository.findById(id).orElseThrow();
+
+        orderService.updateOrderStatus(order, newStatus, admin);
+        
+        return ResponseEntity.ok(orderRepository.findById(id).get());
     }
 
     @PostMapping("/orders/{id}/assign")

@@ -1,18 +1,12 @@
 package com.example.lastmile.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_tracking_history")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class OrderTrackingHistory {
 
     @Id
@@ -38,4 +32,64 @@ public class OrderTrackingHistory {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime timestamp;
+
+    public OrderTrackingHistory() {}
+
+    public OrderTrackingHistory(Long id, Order order, OrderStatus oldStatus, OrderStatus newStatus, User changedBy, LocalDateTime timestamp) {
+        this.id = id;
+        this.order = order;
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+        this.changedBy = changedBy;
+        this.timestamp = timestamp;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public OrderStatus getOldStatus() {
+        return oldStatus;
+    }
+
+    public void setOldStatus(OrderStatus oldStatus) {
+        this.oldStatus = oldStatus;
+    }
+
+    public OrderStatus getNewStatus() {
+        return newStatus;
+    }
+
+    public void setNewStatus(OrderStatus newStatus) {
+        this.newStatus = newStatus;
+    }
+
+    public User getChangedBy() {
+        return changedBy;
+    }
+
+    public void setChangedBy(User changedBy) {
+        this.changedBy = changedBy;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
 }

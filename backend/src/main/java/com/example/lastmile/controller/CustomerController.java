@@ -36,6 +36,9 @@ public class CustomerController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderTrackingHistoryRepository orderTrackingHistoryRepository;
+
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getMyOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User customer = userRepository.findById(userDetails.getId()).orElseThrow();
@@ -99,5 +102,19 @@ public class CustomerController {
         Order rescheduled = orderService.rescheduleFailedOrder(order, newDate, customer);
         
         return ResponseEntity.ok(rescheduled);
+    }
+
+    @GetMapping("/orders/{id}/timeline")
+    public ResponseEntity<List<OrderTrackingHistory>> getOrderTimeline(@PathVariable Long id, 
+                                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User customer = userRepository.findById(userDetails.getId()).orElseThrow();
+        Order order = orderRepository.findById(id).orElseThrow();
+        
+        if (!order.getCustomer().getId().equals(customer.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        List<OrderTrackingHistory> timeline = orderTrackingHistoryRepository.findByOrderOrderByTimestampAsc(order);
+        return ResponseEntity.ok(timeline);
     }
 }

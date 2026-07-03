@@ -1,9 +1,6 @@
 package com.example.lastmile.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -11,9 +8,6 @@ import java.math.BigDecimal;
 @Table(name = "rate_cards", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"from_zone_id", "to_zone_id", "order_type"})
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RateCard {
     
     @Id
@@ -36,4 +30,64 @@ public class RateCard {
     
     @Column(name = "cod_surcharge", precision = 10, scale = 2)
     private BigDecimal codSurcharge = BigDecimal.ZERO;
+
+    public RateCard() {}
+
+    public RateCard(Long id, Zone fromZone, Zone toZone, String orderType, BigDecimal ratePerKg, BigDecimal codSurcharge) {
+        this.id = id;
+        this.fromZone = fromZone;
+        this.toZone = toZone;
+        this.orderType = orderType;
+        this.ratePerKg = ratePerKg;
+        this.codSurcharge = codSurcharge;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Zone getFromZone() {
+        return fromZone;
+    }
+
+    public void setFromZone(Zone fromZone) {
+        this.fromZone = fromZone;
+    }
+
+    public Zone getToZone() {
+        return toZone;
+    }
+
+    public void setToZone(Zone toZone) {
+        this.toZone = toZone;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
+    public BigDecimal getRatePerKg() {
+        return ratePerKg;
+    }
+
+    public void setRatePerKg(BigDecimal ratePerKg) {
+        this.ratePerKg = ratePerKg;
+    }
+
+    public BigDecimal getCodSurcharge() {
+        return codSurcharge;
+    }
+
+    public void setCodSurcharge(BigDecimal codSurcharge) {
+        this.codSurcharge = codSurcharge;
+    }
+
 }
