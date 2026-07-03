@@ -27,7 +27,22 @@ export default function Login() {
   };
 
   return (
-    <div className="container animate-fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+    <div className="container animate-fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', position: 'relative' }}>
+      {isLoading && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          display: 'flex', flexDirection: 'column',
+          justifyContent: 'center', alignItems: 'center', zIndex: 9999
+        }}>
+          <span className="spinner" style={{ width: '40px', height: '40px', borderTopColor: 'var(--primary)', marginBottom: '1rem' }} />
+          <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Waking up server...</h3>
+          <p style={{ maxWidth: '350px', textAlign: 'center', color: '#666', lineHeight: '1.5' }}>
+            Please wait. Our backend is hosted on a free tier and may take up to <strong>50 seconds</strong> to wake up from inactivity.
+          </p>
+        </div>
+      )}
+
       <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
         <h2 style={{ marginBottom: '1.5rem', textAlign: 'center', color: 'var(--primary)' }}>Sign In</h2>
         {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center', padding: '0.5rem', background: '#FEF2F2', borderRadius: '6px' }}>{error}</div>}
