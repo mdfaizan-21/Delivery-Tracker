@@ -31,6 +31,10 @@ public class RateCard {
     @Column(name = "cod_surcharge", precision = 10, scale = 2)
     private BigDecimal codSurcharge = BigDecimal.ZERO;
 
+    // Transient alias used by frontend (baseRate maps to ratePerKg)
+    @Transient
+    private BigDecimal baseRate;
+
     public RateCard() {}
 
     public RateCard(Long id, Zone fromZone, Zone toZone, String orderType, BigDecimal ratePerKg, BigDecimal codSurcharge) {
@@ -88,6 +92,14 @@ public class RateCard {
 
     public void setCodSurcharge(BigDecimal codSurcharge) {
         this.codSurcharge = codSurcharge;
+    }
+
+    public BigDecimal getBaseRate() {
+        return baseRate != null ? baseRate : ratePerKg;
+    }
+
+    public void setBaseRate(BigDecimal baseRate) {
+        this.baseRate = baseRate;
     }
 
 }

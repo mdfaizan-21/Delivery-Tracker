@@ -53,19 +53,35 @@ public class AdminController {
         return zoneRepository.save(zone);
     }
 
-    // --- RATE CARDS ---
-    @GetMapping("/rates")
+    // --- RATE CARDS --- (accessible via both /rates and /rate-cards)
+    @GetMapping({"rates", "rate-cards"})
     public List<RateCard> getAllRateCards() {
         return rateCardRepository.findAll();
     }
 
-    @PostMapping("/rates")
+    @PostMapping({"rates", "rate-cards"})
     public RateCard createRateCard(@RequestBody RateCard rateCard) {
         Zone from = zoneRepository.findById(rateCard.getFromZone().getId()).orElseThrow();
         Zone to = zoneRepository.findById(rateCard.getToZone().getId()).orElseThrow();
         rateCard.setFromZone(from);
         rateCard.setToZone(to);
+        // Map frontend field names: baseRate -> ratePerKg
+        if (rateCard.getRatePerKg() == null && rateCard.getBaseRate() != null) {
+            rateCard.setRatePerKg(rateCard.getBaseRate());
+        }
         return rateCardRepository.save(rateCard);
+    }
+
+    @DeleteMapping({"rates/{id}", "rate-cards/{id}"})
+    public ResponseEntity<Void> deleteRateCard(@PathVariable Long id) {
+        rateCardRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("zones/{id}")
+    public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
+        zoneRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     // --- ORDERS ---

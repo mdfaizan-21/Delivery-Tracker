@@ -45,6 +45,11 @@ public class CustomerController {
         return ResponseEntity.ok(orderRepository.findByCustomer(customer));
     }
 
+    @GetMapping("/zones")
+    public ResponseEntity<List<Zone>> getAvailableZones() {
+        return ResponseEntity.ok(zoneRepository.findAll());
+    }
+
     @PostMapping("/quotes")
     public ResponseEntity<BigDecimal> getQuote(@RequestParam Long fromZoneId, 
                                                @RequestParam Long toZoneId, 
