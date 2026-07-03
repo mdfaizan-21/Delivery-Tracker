@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api', // Spring Boot backend
+    baseURL: (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080') + '/api',
 });
 
 api.interceptors.request.use((config) => {

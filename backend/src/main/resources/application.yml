@@ -1,22 +1,22 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ep-wandering-base-atdoywl5-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require
-    username: neondb_owner
-    password: npg_VYiIDWgno1H4
+    url: ${DATABASE_URL:jdbc:postgresql://ep-wandering-base-atdoywl5-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require}
+    username: ${DATABASE_USERNAME:neondb_owner}
+    password: ${DATABASE_PASSWORD:npg_VYiIDWgno1H4}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: dummy_username # Replace with Mailtrap username
-    password: dummy_password # Replace with Mailtrap password
+    host: ${MAIL_HOST:sandbox.smtp.mailtrap.io}
+    port: ${MAIL_PORT:2525}
+    username: ${MAIL_USERNAME:dummy_username}
+    password: ${MAIL_PASSWORD:dummy_password}
     properties:
       mail:
         smtp:
@@ -25,10 +25,10 @@ spring:
             enable: true
 
 jwt:
-  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-  expirationMs: 86400000 # 24 hours
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  expirationMs: 86400000
 
 logging:
   level:
-    org.springframework.security: DEBUG
-    com.example.lastmile: DEBUG
+    org.springframework.security: WARN
+    com.example.lastmile: INFO
